@@ -1,0 +1,20 @@
+{
+  "name": "ma-rehearsal",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Ma — a speech rehearsal prompter that paces you with your own breath and pulse (Presage SmartSpectra SDK).",
+  "main": "main.js",
+  "license": "MIT",
+  "scripts": {
+    "build": "esbuild src/renderer.js --bundle --outfile=dist/renderer.bundle.js --platform=browser --format=iife --log-level=warning",
+    "start": "npm run build && electron .",
+    "test": "node --test test/core.test.js"
+  },
+  "dependencies": {
+    "@smartspectra/node-sdk": "3.4.0"
+  },
+  "devDependencies": {
+    "electron": "43.2.0",
+    "esbuild": "^0.25.0"
+  }
+}

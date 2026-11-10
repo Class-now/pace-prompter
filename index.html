@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; style-src 'self' 'unsafe-inline'; media-src 'self' blob: file:; worker-src 'self' blob:;">
+  <title>Ma</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header>
+    <div class="brand"><span class="kanji">間</span><span class="name">Ma</span>
+      <span class="tag">rehearse with your own breath</span></div>
+    <div class="live">
+      <span id="input-badge" class="badge">camera</span>
+      <span id="status" class="badge">idle</span>
+      <span class="chip"><i class="dot pulse-dot" id="pulse-dot"></i><b id="live-pulse">–</b> bpm</span>
+      <span class="chip"><b id="live-breath">–</b> breaths/min</span>
+      <span class="chip" id="talk-chip">silent</span>
+    </div>
+  </header>
+
+  <main>
+    <aside>
+      <div class="preview-wrap">
+        <video id="preview" autoplay muted playsinline></video>
+        <div id="hint" class="hint"></div>
+      </div>
+      <canvas id="breath-trace" width="320" height="70"></canvas>
+      <p class="fine">Video is analysed on this computer and never stored or uploaded.
+        Ma compares you only with your own calm minute. It is a rehearsal aid, not a medical device.</p>
+      <div id="error" class="error" hidden></div>
+    </aside>
+
+    <section id="view-setup" class="view">
+      <h1>Paste the speech you are rehearsing</h1>
+      <textarea id="script" spellcheck="false"></textarea>
+      <label class="consent"><input type="checkbox" id="consent">
+        I am the person in front of the camera and I agree to have my pulse, breathing,
+        blinking and talking measured from the camera during this rehearsal.</label>
+      <div class="row">
+        <button id="btn-begin" class="primary" disabled>Begin: one calm minute first</button>
+        <label class="opt"><input type="checkbox" id="opt-gate" checked> hold the next line until I have taken a breath when I speed up</label>
+      </div>
+    </section>
+
+    <section id="view-calibrate" class="view" hidden>
+      <h1>Sit still and breathe normally</h1>
+      <p class="sub">Ma is learning what calm looks like for you today.</p>
+      <div class="ring-wrap"><div id="cal-ring" class="ring"></div><div id="cal-count" class="count">30</div></div>
+      <p class="sub" id="cal-note">Waiting for the first readings…</p>
+      <button id="btn-skip" class="ghost">Start rehearsing now</button>
+    </section>
+
+    <section id="view-rehearse" class="view" hidden>
+      <div class="progress"><div id="bar"></div></div>
+      <div class="prev" id="line-prev"></div>
+      <div class="line" id="line-now"></div>
+      <div class="next" id="line-next"></div>
+      <div id="gate" class="gate" hidden>
+        <div class="ring breathe" id="gate-ring"></div>
+        <div class="gate-text"><b>Ma.</b> <span id="gate-why"></span><br>One slow breath. The next line appears when you have let it out.</div>
+      </div>
+      <div class="row foot">
+        <span class="kbd">Space</span> next line &nbsp; <span class="kbd">Esc</span> finish
+        <span class="spacer"></span>
+        <span id="vs-rest" class="vs"></span>
+      </div>
+    </section>
+
+    <section id="view-review" class="view" hidden>
+      <h1>Your speech, as your body heard it</h1>
+      <p class="sub" id="review-sub"></p>
+      <div id="review-lines"></div>
+      <h2>Where to plan a pause</h2>
+      <ul id="review-spots"></ul>
+      <div class="row">
+        <button id="btn-copy" class="primary">Copy report (Markdown)</button>
+        <button id="btn-again" class="ghost">Rehearse again</button>
+        <span id="copied" class="sub"></span>
+      </div>
+    </section>
+  </main>
+  <script src="./dist/renderer.bundle.js"></script>
+</body>
+</html>
