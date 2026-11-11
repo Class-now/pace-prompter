@@ -48,6 +48,12 @@ Good signal needs a steady, well-lit face that fills a fair part of the frame.
   (the window is badged **TEST VIDEO**). Useful for working without sitting in front of the camera.
 - `npm start -- --simulate` uses made-up numbers and no SDK at all (badged **SIMULATED**), for UI work only.
 - `npm test` runs the unit tests for the pacing logic in `src/core.js`.
+- `node test/sdk-smoke.mjs path/to/face.mp4` is a headless check against the real SDK: it decodes the
+  video with `ffmpeg` (must be on `PATH`), pushes the frames through `useCustomInput()` / `sendFrame()` at
+  real-time pace, and passes when pulse and breathing readings appear. It pushes frames rather than
+  calling `useFile()` because the SDK's file input reports `kInputUnavailable` on Windows.
+  Use a 30–60 second clip with exactly one still, well-lit face and the upper chest in view
+  (a second face anywhere in the frame, even on a TV in the background, stops measurement).
 
 ## Consent and data handling
 
