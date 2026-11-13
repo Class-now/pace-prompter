@@ -1,0 +1,10 @@
+Good afternoon, and thank you for having me.
+I want to talk about the one minute before you speak.
+Your hands are cold, your heart is loud, and your first sentence comes out too fast.
+Most of us were told to just slow down.
+But nobody tells you where to slow down.
+So I built a prompter that listens to your pulse and your breathing.
+When your body runs ahead of your words, it waits for one breath.
+Then it gives you the next line.
+After the run, it shows where the pauses belong.
+Thank you.

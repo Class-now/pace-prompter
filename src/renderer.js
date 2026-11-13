@@ -34,6 +34,7 @@ let idx = -1;
 let gateState = null; // { timer }
 let summaries = [];
 let testVideoEl = null;
+let cameraStream = null; // our own stream when --camera picks a device; the SDK leaves host streams to us
 
 const tsNum = (ts) => (ts == null ? 0 : typeof ts === 'number' ? ts : typeof ts.toNumber === 'function' ? ts.toNumber() : Number(ts));
 const last = (arr) => (arr && arr.length ? arr[arr.length - 1] : null);
@@ -140,6 +141,19 @@ async function startSensing() {
     const stream = testVideoEl.captureStream();
     $('preview').srcObject = stream; $('preview').play().catch(() => {});
     sdk.useMediaStream(stream);
+  } else if (cfg.camera) {
+    // A named camera (machines with capture cards or virtual cameras listed first).
+    const probe = await navigator.mediaDevices.getUserMedia({ video: true });
+    probe.getTracks().forEach((t) => t.stop());
+    const cams = (await navigator.mediaDevices.enumerateDevices()).filter((d) => d.kind === 'videoinput');
+    const want = cfg.camera.toLowerCase();
+    const cam = cams.find((d) => d.label.toLowerCase().includes(want));
+    if (!cam) throw new Error(`No camera named "${cfg.camera}". Found: ${cams.map((d) => d.label).join(', ')}`);
+    cameraStream = await navigator.mediaDevices.getUserMedia({
+      video: { deviceId: { exact: cam.deviceId }, width: { ideal: 1280 }, height: { ideal: 720 }, frameRate: { ideal: 30 } },
+    });
+    $('preview').srcObject = cameraStream; $('preview').play().catch(() => {});
+    sdk.useMediaStream(cameraStream);
   }
   await sdk.start();
 }
@@ -152,6 +166,7 @@ async function stopSensing() {
     sdk = null;
   }
   if (testVideoEl) { testVideoEl.pause(); testVideoEl = null; }
+  if (cameraStream) { cameraStream.getTracks().forEach((t) => t.stop()); cameraStream = null; }
   $('preview').srcObject = null;
   $('status').textContent = 'idle';
   $('hint').textContent = '';
@@ -306,7 +321,8 @@ function renderReview() {
 }
 
 // ---- wiring ----------------------------------------------------------------------
-$('script').value = SAMPLE;
+$('script').value = cfg.script ? cfg.script.trim() : SAMPLE;
+if (cfg.blurPreview) $('preview').style.filter = 'blur(18px)';
 const badge = $('input-badge');
 if (cfg.simulate) { badge.textContent = 'SIMULATED numbers (UI test)'; badge.classList.add('sim'); }
 else if (cfg.testVideoUrl) { badge.textContent = 'TEST INPUT: recorded video'; badge.classList.add('test'); }
